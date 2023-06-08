@@ -1,0 +1,137 @@
+import java.util.Scanner;
+
+public class OnlineReservationSystem {
+    private static Scanner scanner = new Scanner(System.in);
+    private static boolean loggedIn = false;
+    private static String loggedInUser;
+
+    public static void main(String[] args) {
+        displayLoginForm();
+    }
+
+    private static void displayLoginForm() {
+        System.out.println("=== Login Form ===");
+        System.out.print("Enter login ID: ");
+        String loginId = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        // Check if login credentials are valid (e.g., check against a database)
+        if (isValidCredentials(loginId, password)) {
+            loggedIn = true;
+            loggedInUser = loginId;
+            System.out.println("Login successful. Welcome, " + loggedInUser + "!");
+            displayReservationForm();
+        } else {
+            System.out.println("Invalid login credentials. Please try again.");
+            displayLoginForm();
+        }
+    }
+
+    private static boolean isValidCredentials(String loginId, String password) {
+        // Implement your logic to validate the login credentials
+        // For simplicity, let's assume login is successful for any non-empty login ID and password
+        return !loginId.isEmpty() && !password.isEmpty();
+    }
+
+    private static void displayReservationForm() {
+        if (!loggedIn) {
+            System.out.println("Please login to access the reservation system.");
+            displayLoginForm();
+            return;
+        }
+
+        System.out.println("=== Reservation Form ===");
+        System.out.print("Enter your basic details: ");
+        String basicDetails = scanner.nextLine();
+        System.out.print("Enter train number: ");
+        String trainNumber = scanner.nextLine();
+        // Assume train name is retrieved automatically based on train number
+        String trainName = getTrainName(trainNumber);
+        System.out.println("Train Name: " + trainName);
+        System.out.print("Enter class type: ");
+        String classType = scanner.nextLine();
+        System.out.print("Enter date of journey: ");
+        String dateOfJourney = scanner.nextLine();
+        System.out.print("Enter source (place): ");
+        String source = scanner.nextLine();
+        System.out.print("Enter destination: ");
+        String destination = scanner.nextLine();
+
+        // Save the reservation details to the central database (e.g., insert into a table)
+        saveReservation(basicDetails, trainNumber, classType, dateOfJourney, source, destination);
+
+        System.out.println("Reservation successful. Thank you!");
+        displayCancellationForm();
+    }
+
+    private static String getTrainName(String trainNumber) {
+        // Retrieve train name based on the train number from the database or any external service
+        // For simplicity, let's assume the train name is hardcoded for demonstration purposes
+        if (trainNumber.equals("12345")) {
+            return "Sample Express";
+        } else {
+            return "Unknown Train";
+        }
+    }
+
+    private static void saveReservation(String basicDetails, String trainNumber, String classType,
+                                        String dateOfJourney, String source, String destination) {
+        // Implement the logic to save the reservation details to the database
+        // For simplicity, let's assume the details are printed here instead of saving to a database
+        System.out.println("=== Reservation Details ===");
+        System.out.println("Basic Details: " + basicDetails);
+        System.out.println("Train Number: " + trainNumber);
+        System.out.println("Class Type: " + classType);
+        System.out.println("Date of Journey: " + dateOfJourney);
+        System.out.println("Source: " + source);
+        System.out.println("Destination: " + destination);
+    }
+
+    private static void displayCancellationForm() {
+        if (!loggedIn) {
+            System.out.println("Please login to access the cancellation form.");
+            displayLoginForm();
+            return;
+        }
+
+        System.out.println("=== Cancellation Form ===");
+        System.out.print("Enter PNR number: ");
+        String pnrNumber = scanner.nextLine();
+
+        // Retrieve reservation details based on PNR number from the database
+        String reservationDetails = getReservationDetails(pnrNumber);
+        if (reservationDetails != null) {
+            System.out.println("Reservation Details: ");
+            System.out.println(reservationDetails);
+            System.out.print("Press OK to confirm cancellation (or any other key to cancel): ");
+            String confirmation = scanner.nextLine();
+            if (confirmation.equalsIgnoreCase("OK")) {
+                // Implement cancellation logic (e.g., delete the reservation from the database)
+                cancelReservation(pnrNumber);
+                System.out.println("Cancellation successful. Thank you!");
+            } else {
+                System.out.println("Cancellation canceled.");
+            }
+        } else {
+            System.out.println("Invalid PNR number. Please try again.");
+            displayCancellationForm();
+        }
+    }
+
+    private static String getReservationDetails(String pnrNumber) {
+        // Retrieve reservation details based on PNR number from the database
+        // For simplicity, let's assume reservation details are hardcoded here
+        if (pnrNumber.equals("123456")) {
+            return "Reservation Details: Sample Reservation";
+        } else {
+            return null;
+        }
+    }
+
+    private static void cancelReservation(String pnrNumber) {
+        // Implement the cancellation logic (e.g., delete the reservation from the database)
+        // For simplicity, let's assume the cancellation is successful and print a message
+        System.out.println("Cancelled reservation with PNR number: " + pnrNumber);
+    }
+}
